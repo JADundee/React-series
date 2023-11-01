@@ -1,43 +1,65 @@
 import { useState } from "react";
-
+import { FaTrashCan } from 'react-icons/fa6'
 
 
 const Content = () => {
-  const [name, setName] = useState('Randy')
-  const [count, setCount] = useState(0)
-    
-  const handleNameChange = () => {
-    const names = ['Bobert', 'Randy', 'Bobandy', 'Jimmy'];
-    const int = Math.floor(Math.random() * 4);
-    setName(names[int]);
+  const [items, setItems] = useState([
+    {
+      id: 1,
+      checked: false,
+      item: "item 1"
+    },
+    {
+      id: 2,
+      checked: false,
+      item: "item 2"
+    },
+    {
+      id: 3,
+      checked: false,
+      item: "item 3"
+    },
+
+  ])
+
+  const handleCheck = (id) => {
+    const listItems = items.map((item) => 
+    item.id === id 
+    ? { ...item, checked: !item.checked } 
+    : item)
+    setItems(listItems)
+    localStorage.setItem('shoppinglist', JSON.stringify(listItems))
   }
 
-  // Vanilla JS way
-    /* const handleNameChange = () => {
-        const names = ['Bobert', 'Randy', 'Bobandy', 'Jimmy'];
-        const int = Math.floor(Math.random() * 4);
-        return names[int];
-      } */
-
-      const handleClick = () => {
-        setCount(count + 1)
-        setCount(count + 1)
-        console.log(count)
-      }
-
-      const handleClick2 = () => {
-        console.log(count)
-      }
-      
-
+  const handleDelete = (id) => {
+    const listItems = items.filter((item) => item.id !== id)
+    setItems(listItems)
+    localStorage.setItem('shoppinglist', JSON.stringify(listItems))
+  }
     return (
         <main>
-            <p onDoubleClick={handleClick}>
-                Hello {name}!
-            </p>
-            <button onClick={handleNameChange}>Clicky</button>
-            <button onClick={handleClick}>Click</button>
-            <button onClick={handleClick2}>Click</button>
+          {items.lenght ? (
+            <ul>
+              {items.map((item) => (
+                <li className="item" key={item.id}>
+                  <input 
+                    type="checkbox"
+                    onChange={() => handleCheck(item.id)}
+                    checked={item.checked}
+                  />
+                  <label
+                    style={(item.checked) ? { textDecoration: 'line-through'} : null}
+                    onDoubleClick={() => handleCheck(item.id)}
+                  >{item.item}</label>
+                  <FaTrashCan
+                    onClick={() => handleDelete(item.id)} 
+                    role="button" 
+                    tabIndex='0' 
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (<p style={{ marginTop: '2rem'}}>Your list is empty.</p>) }
         </main>
     )
 }
