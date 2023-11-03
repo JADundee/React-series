@@ -1,4 +1,3 @@
-import React from 'react'
 import { FaTrashCan } from 'react-icons/fa6';
 
 const LineItem = ({ item, handleCheck, handleDelete }) => {
